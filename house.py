@@ -9,7 +9,6 @@ data = pd.read_csv("train.csv")
 
 #Analysing data for relevant columns
 
-#Investigating data
 desc = data.describe()
 print(desc)
 data.columns
@@ -18,6 +17,7 @@ desc['SalePrice'].describe
 desc['YearBuilt'].describe
 desc['GrLivArea'].describe
 desc['TotalBsmtSF'].describe
+desc['OverallQual'].describe
 
 #Creating distplot for saleprice
 sns.distplot(data['SalePrice'])
@@ -47,6 +47,12 @@ sns.distplot(data['YearBuilt'])
 #Creating histogram for YearBuilt
 plt.hist(data['YearBuilt'])
 
+#Creating distplot for OverallQual
+sns.distplot(data['OverallQual'])
+
+#Creating histogram for OverallQual
+plt.hist(data['OverallQual'])
+
 #Creating scatter plot for SalePrice and TotalBsmtSF
 plt.scatter(data['TotalBsmtSF'], data['SalePrice'])
 plt.show()
@@ -58,3 +64,12 @@ plt.show()
 #Creating scatterplot for SalePrice and YearBuilt
 plt.scatter(data['YearBuilt'], data['SalePrice'])
 plt.show()
+
+#Creating a boxplot fpr YearBuilt and SalePrice
+sns.boxplot(x = data['YearBuilt'], y = data['SalePrice'], data = data)
+
+#Creating a pairplot for less relevant variables as well
+sns.set()
+cols = ['SalePrice', 'OverallQual', 'GrLivArea', 'GarageCars', 'TotalBsmtSF', 'FullBath', 'YearBuilt']
+sns.pairplot(data[cols], size = 2.5)
+plt.show();
