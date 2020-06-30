@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
+from scipy import stats
 
 #Importing dataset
 data = pd.read_csv("train.csv")
@@ -113,3 +114,48 @@ print('Outside of lower range of the distribution:')
 print(low_range)
 print('\nOutside of higher range of the distribution:')
 print(high_range)
+
+#Solving for normality and homoscedasticity fro relevant variables
+
+#Normality
+
+#SalePrice
+pt = stats.probplot(data['SalePrice'], plot=plt)
+#Applying log transformation
+data['SalePrice'] = np.log(data['SalePrice'])
+sns.distplot(data['SalePrice'])
+pt = stats.probplot(data['SalePrice'], plot=plt)
+
+#GrLivArea
+pt = stats.probplot(data['GrLivArea'], plot=plt)
+#Applying log transformation
+data['GrLivArea'] = np.log(data['GrLivArea'])
+sns.distplot(data['GrLivArea'])
+pt = stats.probplot(data['GrLivArea'], plot=plt)
+
+#TotalBsmtSF
+sns.distplot(data['TotalBsmtSF'])
+pt = stats.probplot(data['TotalBsmtSF'], plot=plt)
+
+#Log transformation not possible directly
+#Use categorical variables
+#if area>0 it gets 1, for area==0 it gets 0
+data['BsmtPresent'] = pd.Series(len(data['TotalBsmtSF']), index=data.index)
+data['BsmtPresent'] = 0 
+data.loc[data['TotalBsmtSF']>0,'BsmtPresent'] = 1
+
+#Log transformation
+data.loc[data['BsmtPresent']==1,'TotalBsmtSF'] = np.log(data['TotalBsmtSF'])
+
+#Visualization
+sns.distplot(data[data['TotalBsmtSF']>0]['TotalBsmtSF']);
+res = stats.probplot(data[data['TotalBsmtSF']>0]['TotalBsmtSF'], plot=plt)
+
+
+#Homoscedasticity
+plt.scatter(data['GrLivArea'], data['SalePrice'])
+plt.scatter(data[data['TotalBsmtSF']>0]['TotalBsmtSF'], data[data['TotalBsmtSF']>0]['SalePrice'])
+
+
+#Converting categorical variable to dummy variable
+data = pd.get_dummies(data)
