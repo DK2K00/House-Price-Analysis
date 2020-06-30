@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import StandardScaler
 
 #Importing dataset
 data = pd.read_csv("train.csv")
@@ -83,3 +84,32 @@ sns.set(font_scale=1.25)
 hm = sns.heatmap(cm, cbar=True, annot=True, square=True, fmt='.2f', annot_kws={'size': 10}, yticklabels=col.values, xticklabels=col.values)
 plt.show()
 
+#Data Manipulation
+
+#Checking amount of missing data
+total = data.isnull().sum().sort_values(ascending=False)
+percent = (data.isnull().sum()/data.isnull().count()).sort_values(ascending=False)
+missing_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
+missing_data.head(10)
+missing_data.tail(10)
+
+#Removing ad dealing with missing data
+data = data.drop((missing_data[missing_data['Total'] > 1]).index,1)
+data = data.drop(data.loc[data['Electrical'].isnull()].index)
+data.isnull().sum().max()
+
+#Dealing with outliers
+
+#Deleting outlier points for GrLivArea
+data.sort_values(by = 'GrLivArea', ascending = False)[:2]
+data = data.drop(data[data['Id'] == 1299].index)
+data = data.drop(data[data['Id'] == 524].index)
+
+#standardizing data
+saleprice_scaled = StandardScaler().fit_transform(data['SalePrice'][:,np.newaxis]);
+low_range = saleprice_scaled[saleprice_scaled[:,0].argsort()][:10]
+high_range= saleprice_scaled[saleprice_scaled[:,0].argsort()][-10:]
+print('Outside of lower range of the distribution:')
+print(low_range)
+print('\nOutside of higher range of the distribution:')
+print(high_range)
