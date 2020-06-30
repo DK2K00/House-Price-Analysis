@@ -73,3 +73,13 @@ sns.set()
 cols = ['SalePrice', 'OverallQual', 'GrLivArea', 'GarageCars', 'TotalBsmtSF', 'FullBath', 'YearBuilt']
 sns.pairplot(data[cols], size = 2.5)
 plt.show();
+
+#Heatmap to check correlation of SalePrice
+n = 10 #number of variables
+corrmat = data.corr()
+col = corrmat.nlargest(n, 'SalePrice')['SalePrice'].index
+cm = np.corrcoef(data[col].values.T)
+sns.set(font_scale=1.25)
+hm = sns.heatmap(cm, cbar=True, annot=True, square=True, fmt='.2f', annot_kws={'size': 10}, yticklabels=col.values, xticklabels=col.values)
+plt.show()
+
