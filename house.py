@@ -159,3 +159,39 @@ plt.scatter(data[data['TotalBsmtSF']>0]['TotalBsmtSF'], data[data['TotalBsmtSF']
 
 #Converting categorical variable to dummy variable
 data = pd.get_dummies(data)
+
+
+#Applying regression
+
+#Using multiple regression
+#Creating training data
+X_train = data.iloc[:, 0:34].values
+Y_train = data.iloc[:, 34].values
+
+#Train test split
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(X_train, Y_train, test_size = 0.2, random_state = 0)
+
+# Fitting Multiple Linear Regression to the Training set
+from sklearn.linear_model import LinearRegression
+regressor = LinearRegression()
+regressor.fit(x_train, y_train)
+
+#Predicting values
+y_pred = regressor.predict(x_test)
+
+
+# #Importing test data
+# test_data = pd.read_csv("test.csv")
+# test_data.columns
+
+# #Missing test data
+# total_test = test_data.isnull().sum().sort_values(ascending=False)
+# test_percent = (test_data.isnull().sum()/test_data.isnull().count()).sort_values(ascending=False)
+# missing_test_data = pd.concat([total, percent], axis=1, keys=['Total', 'Percent'])
+# missing_test_data.head(20)
+
+# test_data = test_data.drop((missing_test_data[missing_test_data['Total'] > 1]).index,1)
+# test_data = test_data.drop(test_data.loc[test_data['Electrical'].isnull()].index)
+# test_data.isnull().sum().max()
+
