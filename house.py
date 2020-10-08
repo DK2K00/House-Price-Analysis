@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import StandardScaler
 from scipy import stats
+import pickle
 
 #Importing dataset
 data = pd.read_csv("train.csv")
@@ -180,6 +181,8 @@ regressor.fit(x_train, y_train)
 #Predicting values
 y_pred = regressor.predict(x_test)
 
+filename = 'finalized_model.sav'
+pickle.dump(regressor, open(filename, 'wb'))
 
 # #Importing test data
 # test_data = pd.read_csv("test.csv")
